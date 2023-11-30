@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-api-grpc
+  labels:
+    app: post-api-grpc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: post-api-grpc
+  template:
+    metadata:
+      labels:
+        app: post-api-grpc
+    spec:
+      containers:
+      - command:
+        - ./api
+        image: homayoonalimohammadi/post-api-grpc:latest
+        imagePullPolicy: Never # uncomment for local kind
+        name: post-api-grpc
+        env:
+        - name: POST_API_INTERVAL_MILLIS
+          value: "2000"
+        ports:
+        - containerPort: 8888
+          protocol: TCP

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-storage-http
+  labels:
+    app: post-storage-http
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: post-storage-http
+  template:
+    metadata:
+      labels:
+        app: post-storage-http
+    spec:
+      containers:
+      - command:
+        - ./storage
+        image: homayoonalimohammadi/post-storage-http:latest
+        imagePullPolicy: Never
+        name: post-storage-http
+        env:
+        - name: POST_STORAGE_INTERVAL_MILLIS
+          value: "5000"
+        ports:
+        - containerPort: 8080
+          protocol: TCP

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-api-http
+  labels:
+    app: post-api-http
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: post-api-http
+  template:
+    metadata:
+      labels:
+        app: post-api-http
+    spec:
+      containers:
+      - command:
+        - ./api
+        image: homayoonalimohammadi/post-api-http:latest
+        imagePullPolicy: Never
+        name: post-api-http
+        env:
+        - name: POST_API_INTERVAL_MILLIS
+          value: "1000"
+        ports:
+        - containerPort: 8080
+          protocol: TCP

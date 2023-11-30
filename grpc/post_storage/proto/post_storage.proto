@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option go_package = "post_storage";
+
+message Post {
+    string title = 1;
+    string description = 2;
+    string phone = 3;
+}
+
+message GetPostRequest {
+    string token = 1;
+}
+
+message GetPostResponse {
+    Post post = 1;
+}
+
+service PostStorage {
+    rpc GetPost(GetPostRequest) returns (GetPostResponse);
+}

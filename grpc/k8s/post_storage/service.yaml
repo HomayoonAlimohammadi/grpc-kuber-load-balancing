@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: post-storage-grpc
+  labels:
+    app: post-storage-grpc
+spec:
+  ports:
+  - name: post-storage-grpc-port
+    port: 8888
+    protocol: TCP
+    targetPort: 8888
+  selector:
+    app: post-storage-grpc
+  type: ClusterIP

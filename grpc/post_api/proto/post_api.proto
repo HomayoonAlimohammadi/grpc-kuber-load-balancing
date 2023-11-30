@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option go_package = "post_api";
+
+message ShowPostRequest {
+    string token = 1;
+}
+
+message ShowPostResponse {
+    string title = 1;
+    string description = 2;  
+}
+
+service PostAPI {
+    rpc ShowPost(ShowPostRequest) returns (ShowPostResponse);
+}

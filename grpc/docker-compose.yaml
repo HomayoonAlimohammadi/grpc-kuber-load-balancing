@@ -1,0 +1,26 @@
+version: "3.7"
+services:
+  post_api:
+    build: .
+    image: post-api-grpc:latest
+    container_name: post-api-grpc
+    ports:
+      - 8888:8888/tcp
+    restart: always
+    networks:
+      - grpc-net
+
+  post_storage:
+    build: ./post_storage
+    image: post-storage-grpc:latest
+    container_name: post-storage-grpc
+    ports:
+      - 8890:8890/tcp
+    restart: always
+    networks:
+      - grpc-net
+
+networks:
+  grpc-net:
+    name: grpc-net
+    driver: bridge

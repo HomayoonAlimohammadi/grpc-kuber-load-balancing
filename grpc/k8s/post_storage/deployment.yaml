@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-storage-grpc
+  labels:
+    app: post-storage-grpc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: post-storage-grpc
+  template:
+    metadata:
+      labels:
+        app: post-storage-grpc
+    spec:
+      containers:
+      - command:
+        - ./storage
+        image: homayoonalimohammadi/post-storage-grpc:latest 
+        imagePullPolicy: Never # uncomment for local kind
+        name: post-storage-grpc
+        env:
+        - name: POST_STORAGE_INTERVAL_MILLIS
+          value: "5000"
+        ports:
+        - containerPort: 8888
+          protocol: TCP
