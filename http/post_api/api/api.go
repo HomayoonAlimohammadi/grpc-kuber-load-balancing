@@ -9,7 +9,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	postStorage "post_storage/api"
+	postStorage "http/post_storage/api"
 )
 
 type PostAPIServer interface {

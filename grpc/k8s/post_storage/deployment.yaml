@@ -17,12 +17,15 @@ spec:
       containers:
       - command:
         - ./storage
-        image: homayoonalimohammadi/post-storage-grpc:latest 
-        imagePullPolicy: Never # uncomment for local kind
+        image: post-storage-grpc:latest 
+        # for local development with "kind", otherwise set to IfNotPresent or Always (if using :latest)
+        imagePullPolicy: Never 
         name: post-storage-grpc
         env:
         - name: POST_STORAGE_INTERVAL_MILLIS
-          value: "5000"
+          value: "50000"
+        - name: POST_STORAGE_SLEEP_TIME_MILLIS
+          value: "1500"
         ports:
         - containerPort: 8888
           protocol: TCP

@@ -14,10 +14,10 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 
-	postStoragePB "post_storage/proto/autogen/post_storage"
+	postStoragePB "grpc/post_storage/proto/autogen/post_storage"
 
-	pb "post_api/proto/autogen/post_api"
-	"post_api/src/core"
+	pb "grpc/post_api/proto/autogen/post_api"
+	"grpc/post_api/src/core"
 )
 
 func main() {
@@ -66,7 +66,7 @@ func getPostStorageClientOrPanic(serviceName, port string) postStoragePB.PostSto
 }
 
 func healthCheck(port string, interval time.Duration) {
-	fmt.Println("initializing health check...")
+	fmt.Printf("initializing health check with %d milli seconds interval...\n", interval.Milliseconds())
 	conn, err := grpc.Dial(fmt.Sprintf(":%s", port),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -78,9 +78,11 @@ func healthCheck(port string, interval time.Duration) {
 
 	ticker := time.NewTicker(interval)
 	for t := range ticker.C {
-		_, err := c.ShowPost(context.TODO(), &pb.ShowPostRequest{Token: "post-api-health-check"})
-		if err != nil {
-			logrus.WithError(err).WithField("time", t).Error("health check failed")
-		}
+		go func(t time.Time) {
+			_, err := c.ShowPost(context.TODO(), &pb.ShowPostRequest{Token: "post-api-health-check"})
+			if err != nil {
+				logrus.WithError(err).WithField("time", t).Error("health check failed")
+			}
+		}(t)
 	}
 }

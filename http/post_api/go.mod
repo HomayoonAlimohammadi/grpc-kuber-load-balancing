@@ -1,4 +1,4 @@
-module post_api
+module http/post_api
 
 go 1.21.4
 

@@ -6,7 +6,7 @@ metadata:
     app: post-api-http
 spec:
   ports:
-  - name: post-api-http-port
+  - name: post-api-http
     port: 8080
     protocol: TCP
     targetPort: 8080

@@ -6,8 +6,8 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	pb "post_api/proto/autogen/post_api"
-	"post_storage/proto/autogen/post_storage"
+	pb "grpc/post_api/proto/autogen/post_api"
+	"grpc/post_storage/proto/autogen/post_storage"
 )
 
 type service struct {

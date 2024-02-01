@@ -17,12 +17,12 @@ spec:
       containers:
       - command:
         - ./api
-        image: homayoonalimohammadi/post-api-http:latest
+        image: post-api-http:latest
         imagePullPolicy: Never
         name: post-api-http
         env:
         - name: POST_API_INTERVAL_MILLIS
-          value: "1000"
+          value: "500"
         ports:
         - containerPort: 8080
           protocol: TCP

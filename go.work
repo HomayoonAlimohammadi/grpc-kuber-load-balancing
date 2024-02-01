@@ -1,0 +1,8 @@
+go 1.21.6
+
+use (
+	./grpc/post_api
+	./grpc/post_storage
+	./http/post_api
+	./http/post_storage
+)

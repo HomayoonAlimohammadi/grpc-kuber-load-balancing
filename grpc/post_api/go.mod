@@ -1,4 +1,4 @@
-module post_api
+module grpc/post_api
 
 go 1.21.4
 

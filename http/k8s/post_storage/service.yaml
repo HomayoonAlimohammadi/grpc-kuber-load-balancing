@@ -6,10 +6,10 @@ metadata:
     app: post-storage-http
 spec:
   ports:
-  - name: post-storage-http-port
-    port: 8080
+  - name: post-storage-http
+    port: 8090
     protocol: TCP
-    targetPort: 8080
+    targetPort: 8090
   selector:
     app: post-storage-http
   type: ClusterIP

@@ -1,4 +1,4 @@
-.PHONY: autogen api storage up
+PUSH := 0
 
 autogen: 
 	@protoc \
@@ -19,13 +19,27 @@ autogen:
 
 	@echo "Generated files from proto successfully!"
 
+.PHONY: api
 api: autogen
 	@docker build -t post-api-grpc:latest -t homayoonalimohammadi/post-api-grpc:latest .
-	@docker push homayoonalimohammadi/post-api-grpc:latest
+	@if [ "$$PUSH" = "1" ]; then \
+		docker push homayoonalimohammadi/post-api-grpc:latest; \
+	fi
+	kind load docker-image post-api-grpc:latest
 
+
+.PHONY: storage
 storage: autogen
 	@docker build -t post-storage-grpc:latest -t homayoonalimohammadi/post-storage-grpc:latest ./post_storage
-	@docker push homayoonalimohammadi/post-storage-grpc:latest
+	@if [ "$$PUSH" = "1" ]; then \
+		docker push homayoonalimohammadi/post-storage-grpc:latest; \
+	fi
+	kind load docker-image post-storage-grpc:latest
 
+.PHONY: both
+both: api storage
+	@echo "Made both!"
+
+.PHONY: up
 up: autogen
 	@docker compose up

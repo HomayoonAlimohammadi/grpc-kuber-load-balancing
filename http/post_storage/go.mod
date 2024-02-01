@@ -1,4 +1,4 @@
-module post_storage
+module http/post_storage
 
 go 1.21.4
 

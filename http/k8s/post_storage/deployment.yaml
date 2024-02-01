@@ -17,12 +17,14 @@ spec:
       containers:
       - command:
         - ./storage
-        image: homayoonalimohammadi/post-storage-http:latest
+        image: post-storage-http:latest
         imagePullPolicy: Never
         name: post-storage-http
         env:
         - name: POST_STORAGE_INTERVAL_MILLIS
-          value: "5000"
+          value: "50000"
+        - name: POST_STORAGE_SLEEP_TIME_MILLIS
+          value: "1500"
         ports:
         - containerPort: 8080
           protocol: TCP

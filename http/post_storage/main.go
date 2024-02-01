@@ -9,7 +9,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"post_storage/api"
+	"http/post_storage/api"
 )
 
 func main() {
@@ -43,17 +43,20 @@ func main() {
 }
 
 func healthCheck(port string, interval time.Duration) {
-	fmt.Println("initializing health check...")
+	fmt.Printf("initializing health check with %d milliseconds interval...\n", interval.Milliseconds())
 
 	ticker := time.NewTicker(interval)
 	for range ticker.C {
-		res, err := http.Get(fmt.Sprintf("http://localhost:%s/posts/get?token=post-storage-health-check", port))
-		if err != nil {
-			logrus.WithError(err).Error("failed to health check")
-			continue
-		}
-		if res.StatusCode != 200 {
-			logrus.WithError(err).Error("failed to health check")
-		}
+		go func() {
+			res, err := http.Get(fmt.Sprintf("http://localhost:%s/posts/get?token=post-storage-health-check", port))
+			if err != nil {
+				logrus.WithError(err).Error("failed to health check")
+				return
+			}
+
+			if res.StatusCode != 200 {
+				logrus.WithError(err).Error("failed to health check")
+			}
+		}()
 	}
 }

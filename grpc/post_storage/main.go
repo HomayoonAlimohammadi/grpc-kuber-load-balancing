@@ -14,8 +14,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 
-	pb "post_storage/proto/autogen/post_storage"
-	"post_storage/src/core"
+	pb "grpc/post_storage/proto/autogen/post_storage"
+	"grpc/post_storage/src/core"
 )
 
 func main() {
@@ -54,7 +54,7 @@ func main() {
 }
 
 func healthCheck(port string, interval time.Duration) {
-	fmt.Println("initializing health check...")
+	fmt.Printf("initializing health check with %d milli seconds interval...\n", interval.Milliseconds())
 	conn, err := grpc.Dial(fmt.Sprintf(":%s", port),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -66,9 +66,11 @@ func healthCheck(port string, interval time.Duration) {
 
 	ticker := time.NewTicker(interval)
 	for t := range ticker.C {
-		_, err := c.GetPost(context.TODO(), &pb.GetPostRequest{Token: "post-storage-health-check"})
-		if err != nil {
-			logrus.WithError(err).WithField("time", t).Error("health check failed")
-		}
+		go func(t time.Time) {
+			_, err := c.GetPost(context.TODO(), &pb.GetPostRequest{Token: "post-storage-health-check"})
+			if err != nil {
+				logrus.WithError(err).WithField("time", t).Error("health check failed")
+			}
+		}(t)
 	}
 }

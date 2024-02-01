@@ -6,7 +6,7 @@ metadata:
     app: post-api-grpc
 spec:
   ports:
-  - name: post-api-grpc-port
+  - name: post-api-grpc
     port: 8888
     protocol: TCP
     targetPort: 8888

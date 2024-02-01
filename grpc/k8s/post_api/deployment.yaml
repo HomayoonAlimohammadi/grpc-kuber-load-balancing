@@ -17,12 +17,13 @@ spec:
       containers:
       - command:
         - ./api
-        image: homayoonalimohammadi/post-api-grpc:latest
-        imagePullPolicy: Never # uncomment for local kind
+        image: post-api-grpc:latest
+        # for local development with "kind", otherwise set to IfNotPresent or Always (if using :latest)
+        imagePullPolicy: Never
         name: post-api-grpc
         env:
         - name: POST_API_INTERVAL_MILLIS
-          value: "2000"
+          value: "500"
         ports:
         - containerPort: 8888
           protocol: TCP

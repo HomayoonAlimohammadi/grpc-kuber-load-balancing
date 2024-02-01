@@ -6,10 +6,10 @@ metadata:
     app: post-storage-grpc
 spec:
   ports:
-  - name: post-storage-grpc-port
-    port: 8888
+  - name: post-storage-grpc
+    port: 8890
     protocol: TCP
-    targetPort: 8888
+    targetPort: 8890
   selector:
     app: post-storage-grpc
   type: ClusterIP

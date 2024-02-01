@@ -1,4 +1,4 @@
-module post_storage
+module grpc/post_storage
 
 go 1.21.4
 

@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
+	"strconv"
+	"time"
 
 	"github.com/sirupsen/logrus"
 )
@@ -29,6 +32,17 @@ func (s *server) GetPost(w http.ResponseWriter, r *http.Request) {
 
 	logrus.Info("got get post request with token: ", token)
 
+	sleepTime := 1000 // millis
+	if tStr := os.Getenv("POST_STORAGE_SLEEP_TIME_MILLIS"); tStr != "" {
+		if t, err := strconv.Atoi(tStr); err == nil {
+			sleepTime = t
+		}
+	}
+
+	logrus.Infof("sleeping for %d milliseconds", sleepTime)
+	// sleep to mimic an expensive calculation
+	time.Sleep(time.Duration(sleepTime) * time.Millisecond)
+
 	resp := GetPostResponse{
 		Title:       "some title",
 		Description: "some description",
@@ -41,6 +55,8 @@ func (s *server) GetPost(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(fmt.Errorf("failed to marshal response to json: %w", err).Error()))
 		return
 	}
+
+	logrus.Info("sending response...")
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(mResp)
