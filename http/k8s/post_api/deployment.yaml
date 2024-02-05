@@ -23,6 +23,10 @@ spec:
         env:
         - name: POST_API_INTERVAL_MILLIS
           value: "500"
+        - name: GRPC_GO_LOG_SEVERITY_LEVEL
+          value: info
+        - name: GRPC_GO_LOG_VERBOSITY_LEVEL
+          value: 99
         ports:
         - containerPort: 8080
           protocol: TCP

@@ -1,4 +1,4 @@
-PUSH := 0
+PUSH ?= 0
 
 autogen: 
 	@protoc \

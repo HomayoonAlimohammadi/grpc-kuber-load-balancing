@@ -23,7 +23,7 @@ func main() {
 
 	intervalStr, ok := os.LookupEnv("POST_STORAGE_INTERVAL_MILLIS")
 
-	interval := 2000 // milis
+	interval := 20000 // milis
 	if ok {
 		interval, err = strconv.Atoi(intervalStr)
 		if err != nil {

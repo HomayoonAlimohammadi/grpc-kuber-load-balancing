@@ -5,12 +5,16 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
+	chzUI "github.com/rantav/go-grpc-channelz"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
+	chzService "google.golang.org/grpc/channelz/service"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 
@@ -22,16 +26,44 @@ import (
 
 func main() {
 	logrus.SetLevel(logrus.InfoLevel)
-	port := "8888"
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
+	// channelz
+	chzAddr := ":50050"
+	lis, err := net.Listen("tcp", chzAddr)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	defer lis.Close()
+	s := grpc.NewServer()
+	chzService.RegisterChannelzServiceToServer(s)
+	go s.Serve(lis)
+	logrus.Info("starting channelz server")
+	defer s.Stop()
+
+	http.Handle("/", chzUI.CreateHandler("/", chzAddr))
+	chzUIAddr := ":8080"
+	lis, err = net.Listen("tcp", chzUIAddr)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	go http.Serve(lis, nil) // head to localhost:8080/channelz/ (trailing slash is important)
+
+	// post api server
+	port := "8888"
+	lis, err = net.Listen("tcp", fmt.Sprintf(":%s", port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
 	grpcServer := grpc.NewServer()
 	reflection.Register(grpcServer)
-	psClient := getPostStorageClientOrPanic("post-storage-grpc", "8890")
+
+	postStorageName := "post-storage-grpc"
+	if noHost := os.Getenv("NO_HOST"); strings.ToLower(noHost) == "true" || noHost == "1" {
+		postStorageName = ""
+	}
+
+	psClient := getPostStorageClientOrPanic(postStorageName, "8890")
 	pb.RegisterPostAPIServer(grpcServer, core.NewService(psClient))
 
 	intervalStr, ok := os.LookupEnv("POST_API_INTERVAL_MILLIS")
@@ -49,7 +81,7 @@ func main() {
 	logrus.Infof("starting post-api-grpc server on port %s", port)
 	err = grpcServer.Serve(lis)
 	if err != nil {
-		panic(err)
+		logrus.WithError(err).Error("failed to serve grpc")
 	}
 
 	logrus.Info("shutting down post-api-grpc server...")
@@ -85,4 +117,9 @@ func healthCheck(port string, interval time.Duration) {
 			}
 		}(t)
 	}
+}
+
+func registerChannelzService(port string) {
+	// port = port + "0"
+
 }

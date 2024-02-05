@@ -26,6 +26,10 @@ spec:
           value: "50000"
         - name: POST_STORAGE_SLEEP_TIME_MILLIS
           value: "1500"
+        - name: GRPC_GO_LOG_SEVERITY_LEVEL
+          value: info
+        - name: GRPC_GO_LOG_VERBOSITY_LEVEL
+          value: "99"
         ports:
         - containerPort: 8888
           protocol: TCP
